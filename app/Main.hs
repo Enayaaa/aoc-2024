@@ -3,12 +3,13 @@ module Main where
 import Options.Applicative
 import System.FilePath
 
-import qualified Day1 (part1, part2)
-import qualified Day2 (part1, part2)
-import qualified Day3 (part1, part2)
-import qualified Day4 (part1, part2)
-import qualified Day5 (part1, part2)
-import qualified Day6 (part1, part2')
+import qualified Day01 (part1, part2)
+import qualified Day02 (part1, part2)
+import qualified Day03 (part1, part2)
+import qualified Day04 (part1, part2)
+import qualified Day05 (part1, part2)
+import qualified Day06 (part1, part2')
+import qualified Day07 (part1, part2)
 
 data Options = Options
     { day   :: Int
@@ -60,12 +61,13 @@ main = do
     inp <- readFile $ inputsDir </> inputFile d i
     let (part1, part2) =
           case d of
-            1 -> (Day1.part1, Day1.part2)
-            2 -> (Day2.part1, Day2.part2)
-            3 -> (Day3.part1, Day3.part2)
-            4 -> (Day4.part1, Day4.part2)
-            5 -> (Day5.part1, Day5.part2)
-            6 -> (Day6.part1, Day6.part2')
+            1 -> (Day01.part1, Day01.part2)
+            2 -> (Day02.part1, Day02.part2)
+            3 -> (Day03.part1, Day03.part2)
+            4 -> (Day04.part1, Day04.part2)
+            5 -> (Day05.part1, Day05.part2)
+            6 -> (Day06.part1, Day06.part2')
+            7 -> (Day07.part1, Day07.part2)
             _ -> undefined
     case p of
         1 -> part1 inp

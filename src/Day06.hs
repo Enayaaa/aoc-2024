@@ -1,11 +1,11 @@
-module Day6 where
+module Day06 where
 
 import Control.DeepSeq
 import Data.Maybe
 import qualified Data.Set as S
 import Debug.Trace
-import Utils
 import System.IO.Unsafe
+import Control.Arrow (second)
 
 data Dir = U | D | L | R deriving (Show, Eq, Ord)
 

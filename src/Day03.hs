@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -Wno-unused-do-bind #-}
-module Day3 where
+module Day03 where
 
 import Text.Regex.TDFA
 import Text.Parsec

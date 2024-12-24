@@ -1,4 +1,4 @@
-module Day2 where
+module Day02 where
 
 parse :: String -> [[Int]]
 parse inp = map (map read . words) $ lines inp
