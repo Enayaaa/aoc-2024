@@ -10,6 +10,7 @@ import qualified Day04 (part1, part2)
 import qualified Day05 (part1, part2)
 import qualified Day06 (part1, part2')
 import qualified Day07 (part1, part2)
+import qualified Day08 (part1, part2)
 
 data Options = Options
     { day   :: Int
@@ -68,7 +69,8 @@ main = do
             5 -> (Day05.part1, Day05.part2)
             6 -> (Day06.part1, Day06.part2')
             7 -> (Day07.part1, Day07.part2)
-            _ -> undefined
+            8 -> (Day08.part1, Day08.part2)
+            _ -> (const $ putStrLn "Invalid day", const $ putStrLn "Invalid day")
     case p of
         1 -> part1 inp
         2 -> part2 inp

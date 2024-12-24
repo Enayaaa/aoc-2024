@@ -17,3 +17,6 @@ fromList _      = error "fromList: list must have exactly two elements"
 
 strip :: String -> String
 strip = T.unpack . T.strip . T.pack
+
+printGrid :: [String] -> IO ()
+printGrid = mapM_ putStrLn
