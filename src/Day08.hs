@@ -1,7 +1,7 @@
 module Day08 where
 
 import Text.Parsec
-import Control.Arrow
+import Control.Arrow (first, second)
 import Data.List
 import Data.Function
 import qualified Data.Set as S
@@ -21,11 +21,14 @@ incCol = second (+1)
 zeroCol :: Pos -> Pos
 zeroCol = second (const 0)
 
+(-|-) :: Pos -> Pos -> Pos
+(r1, c1) -|- (r2, c2) = (r1 - r2, c1 - c2)
+
+(+|+) :: Pos -> Pos -> Pos
+(r1, c1) +|+ (r2, c2) = (r1 + r2, c1 + c2)
+
 antennaP :: Parser Antenna
-antennaP = do
-  (r, c) <- getState
-  freq <- alphaNum <|> char '.'
-  return $ Antenna (r, c) freq
+antennaP =  Antenna <$> getState <*> (alphaNum <|> char '.')
 
 rowP :: Parser ([Antenna], Int)
 rowP = do
@@ -35,11 +38,9 @@ rowP = do
 
 gridP :: Parser Grid
 gridP = do
-  parsed <- endBy (rowP <* modifyState (zeroCol . incRow)) (char '\n') 
-  let cs = snd $ head parsed
-      antennas = concatMap fst parsed
+  parsed <- (rowP <* modifyState (zeroCol . incRow)) `endBy` (char '\n') 
   (rs, _) <- getState
-  return $ Grid {antennas = antennas, rows = rs, cols = cs}
+  return $ Grid {antennas = concatMap fst parsed, rows = rs, cols = snd $ head parsed}
 
 parseGrid :: String -> Grid
 parseGrid s = case runParser gridP (0, 0) "" s of
@@ -56,12 +57,6 @@ showGrid (Grid as rs cs) antiNodes = unlines $ map showRow [0..rs-1]
         True -> '#'
         False -> '.'
     findAntenna r c = find (\a -> pos a == (r, c)) as
-
-subPos :: Pos -> Pos -> Pos
-subPos (r1, c1) (r2, c2) = (r1 - r2, c1 - c2)
-
-addPos :: Pos -> Pos -> Pos
-addPos (r1, c1) (r2, c2) = (r1 + r2, c1 + c2)
 
 getAntiNodes :: Grid -> ((Antenna, Antenna) -> [Pos]) -> S.Set Pos
 getAntiNodes g pairAntiNodes = S.fromList $ concatMap genAntiNodes freqPairs 
@@ -84,10 +79,11 @@ part1 inp = do
   let grid = parseGrid inp
 
       pairAntiNodes (a, b) = 
-        let diff = pos b `subPos` pos a
-         in filter (insideGrid grid) [pos a `subPos` diff, pos b `addPos` diff]
+        let diff = pos b -|- pos a
+         in filter (insideGrid grid) [pos a -|- diff, pos b +|+ diff]
 
       antiNodes = getAntiNodes grid pairAntiNodes
+
   print $ S.size antiNodes
 
 part2 :: String -> IO ()
@@ -95,10 +91,11 @@ part2 inp = do
   let grid = parseGrid inp
 
       pairAntiNodes (a, b) = 
-        let diff = pos b `subPos` pos a
-            left = takeWhile (insideGrid grid) $ iterate (`subPos` diff) (pos a)
-            right = takeWhile (insideGrid grid) $ iterate (`addPos` diff) (pos b)
+        let diff = pos b -|- pos a
+            left = takeWhile (insideGrid grid) $ iterate (-|- diff) (pos a)
+            right = takeWhile (insideGrid grid) $ iterate (+|+ diff) (pos b)
          in left ++ right
 
       antiNodes = getAntiNodes grid pairAntiNodes
+
   print $ S.size antiNodes
