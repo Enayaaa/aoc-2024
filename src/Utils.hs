@@ -15,6 +15,9 @@ fromList :: [a] -> (a, a)
 fromList [a, b] = (a, b)
 fromList _      = error "fromList: list must have exactly two elements"
 
+toList :: (a, a) -> [a]
+toList (a, b) = [a, b]
+
 strip :: String -> String
 strip = T.unpack . T.strip . T.pack
 
